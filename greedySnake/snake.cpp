@@ -24,3 +24,41 @@ void Snake::setHead(node* temp)
 {
 	this->head = temp;
 }
+
+void Snake::setDirection(char c)
+{
+	this->direct = c;
+}
+
+void Snake::move()
+{
+	node* newHead = NULL;
+	//根据不同的方向来设定新的蛇头
+	if (direct == 'w') newHead = new node(head->x, head->y - 1, head->icon, head);
+	else if (direct == 'a') newHead = new node(head->x - 1, head->y, head->icon, head);
+	else if (direct == 's') newHead = new node(head->x, head->y+1, head->icon, head);
+	else if (direct == 'd') newHead = new node(head->x+1, head->y, head->icon, head);
+	//直接释放掉之前的old tail；这种做法是错误的。
+	//delete操作是直接把指针变成一个野指针，而不是设置为NULL
+	//删除尾部节点还是得用链表的基本用法。
+	head->icon = '*';
+	while (head->next != tail) {
+		head = head->next;
+	}
+	head->next = NULL;
+	delete tail;
+	tail = head;
+	head = newHead;
+}
+
+//这个方法用于转向以后的移动操作
+void Snake::move(char c)
+{
+	setDirection(c);
+	move();
+}
+
+char Snake::getDirection()
+{
+	return this->direct;
+}

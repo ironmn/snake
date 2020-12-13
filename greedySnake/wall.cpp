@@ -63,3 +63,14 @@ void Wall::drawSnake(node* para)//para指示的是蛇头的节点
 		para = para->next;
 	}
 }
+
+
+void Wall::update(Snake& snake, char direct)
+{
+	if(direct == 'w' || direct == 'a' || direct == 's' || direct == 'd'){
+		snake.move(direct);
+	}
+	initWall();
+	drawSnake(snake.getHead());
+	showWall();
+}

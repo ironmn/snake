@@ -2,17 +2,51 @@
 //
 #define _CTR_SECURE_NO_WARNING
 #include <iostream>
+#include <time.h>
+#include<stdlib.h>
+#include<conio.h>
+#include <Windows.h>
 #include "snake.h"
 #include"wall.h"
 using namespace std;
+
+clock_t nowTime, preTime;
+
+
 int main()
 {
-
+    //开始界面
+    cout << "按下任意键开始游戏！" << endl;
+    char c = cin.get();
+    system("cls");
+    //正式进入游戏
     Wall wall;
     wall.initWall();
     Snake snake;
     wall.drawSnake(snake.getHead());
-    wall.showWall();
+    
+    //默认的移动方向
+    char input = 'd';
+    bool has_input = false;
+    for (;;) {
+        wall.update(snake, input);
+        preTime = clock();
+        has_input = false;
+        while (true)
+        {
+            nowTime = clock();
+            if (nowTime - preTime > 200) {
+                break;
+            }
+            //如果检测到了输入，就把input设置为输入的字符
+            if (kbhit() && !has_input) {
+                input = _getch();
+                has_input = true;//防止重复的输入去迭代input
+            }
+        }
+        system("cls");
+    }
+    
     return 0;
 }
 

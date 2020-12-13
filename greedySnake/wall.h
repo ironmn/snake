@@ -3,6 +3,7 @@
 #define __greedy__snake__wall
 #include<iostream>
 #include"node.h"
+#include"snake.h"
 #include<stdio.h>
 using namespace std;
 class Wall
@@ -25,6 +26,9 @@ public:
 	char getElem(int x, int y);
 
 	void drawSnake(node* para);
+
+	//带有默认参数的update函数
+	void update(Snake& snake, char direct = 'd');
 
 private:
 	char gameArray[ROW][COL];
