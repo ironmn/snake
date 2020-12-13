@@ -67,10 +67,40 @@ void Wall::drawSnake(node* para)//para指示的是蛇头的节点
 
 void Wall::update(Snake& snake, char direct)
 {
+	if (!test(snake)) {
+		//如果当前的蛇已经碰到边界了，就处理异常
+		game_over();
+		return;
+	}
 	if(direct == 'w' || direct == 'a' || direct == 's' || direct == 'd'){
 		snake.move(direct);
 	}
 	initWall();
 	drawSnake(snake.getHead());
 	showWall();
+}
+
+bool Wall::test(Snake& snake)
+{
+	node* head = snake.getHead();
+	char m = getElem(head->x, head->y);
+	if (m == '#' || m == '*') {
+		//表明已经碰到墙体或者自己了
+		return false;//返回false
+	}
+	return true;
+}
+
+void Wall::game_over()
+{
+	this->initWall();
+	gameArray[15][8] = 'G';
+	gameArray[15][10] = 'A';
+	gameArray[15][12] = 'M';
+	gameArray[15][14] = 'E';
+	gameArray[15][18] = 'O';
+	gameArray[15][20] = 'V';
+	gameArray[15][22] = 'E';
+	gameArray[15][24] = 'R';
+	this->showWall();
 }

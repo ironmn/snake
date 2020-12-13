@@ -30,6 +30,9 @@ public:
 	//带有默认参数的update函数
 	void update(Snake& snake, char direct = 'd');
 
+	bool test(Snake& snake);
+
+	void game_over();
 private:
 	char gameArray[ROW][COL];
 };
