@@ -51,14 +51,27 @@ void Snake::move()
 	head = newHead;
 }
 
-//这个方法用于转向以后的移动操作
-void Snake::move(char c)
-{
-	setDirection(c);
-	move();
-}
+
 
 char Snake::getDirection()
 {
 	return this->direct;
+}
+
+//这个方法用于转向以后的移动操作
+void Snake::move(char c)
+{
+	if (is_opposite({ c,getDirection() }))
+		setDirection(c);
+	move();
+}
+
+bool is_opposite(pair<char,char> tmp)
+{
+	if (tmp.first == 'w' && tmp.second == 's' ||
+		tmp.first == 's' && tmp.second == 'w' ||
+		tmp.first == 'd' && tmp.second == 'a' ||
+		tmp.first == 'a' && tmp.second == 'd')
+		return true;
+	return false;
 }
