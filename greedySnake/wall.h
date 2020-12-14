@@ -10,6 +10,7 @@ class Wall
 {
 public:
 	static bool ate;
+	static bool fail;
 	enum {
 		ROW = 32,
 		COL = 32

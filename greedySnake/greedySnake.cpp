@@ -15,39 +15,48 @@ clock_t nowTime, preTime;
 int speed[] = { 10000,500,150,15,2 };
 int main()
 {
-    //开始界面
-    cout << "请输入游戏难度！" << endl;
-    cout << "1: 简单\t 2:中等\t 3:困难\t4:地狱" << endl;
-    char diff = getchar();
-    system("cls");
-    //正式进入游戏
-    Wall wall;
-    wall.initWall();
-    Snake snake;
-    wall.drawSnake(snake.getHead());
-    //默认的移动方向
-    char input = 'd';
-    bool has_input = false;
-    while(1) {
-        wall.update(snake, input);
-        preTime = clock();
-        has_input = false;
-        while (true)
-        {
-            nowTime = clock();
-            if (nowTime - preTime > speed[diff - '0']) {
-                break;
-            }
-            //如果检测到了输入，就把input设置为输入的字符
-            if (kbhit() && !has_input) {
-                input = _getch();
-                has_input = true;//防止重复的输入去迭代input
-            }
-        }
+    char restart =  ' ';
+    while (restart != 'q') {
         system("cls");
+        //开始界面
+        cout << "请输入游戏难度！" << endl;
+        cout << "1: 简单\t 2:中等\t 3:困难\t4:地狱" << endl;
+        char diff = getchar();
+        system("cls");
+        //正式进入游戏
+        Wall wall;
+        wall.initWall();
+        Snake snake;
+        wall.drawSnake(snake.getHead());
+        //默认的移动方向
+        char input = 'd';
+        bool has_input = false;
+        while (!wall.fail) {
+            wall.update(snake, input);
+            preTime = clock();
+            has_input = false;
+            while (true)
+            {
+                nowTime = clock();
+                if (nowTime - preTime > speed[diff - '0']) {
+                    break;
+                }
+                //如果检测到了输入，就把input设置为输入的字符
+                if (kbhit() && !has_input) {
+                    input = _getch();
+                    has_input = true;//防止重复的输入去迭代input
+                }
+            }
+            system("cls");
+        }
+        wall.game_over();
+        cout << "按任意键重新开始游戏"<<endl;
+        cout << "按Q退出" << endl;
+        getchar();
+        restart = getchar();
+        Wall::ate = false;
+        Wall::fail = false;
     }
-    wall.game_over();
-    
     return 0;
 }
 

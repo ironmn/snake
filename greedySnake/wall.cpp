@@ -4,7 +4,7 @@
 #include<random>
 
 bool Wall::ate = false;
-
+bool Wall::fail = false;
 void Wall :: initWall() {
 	update_food();
 	for (int i = 0; i < ROW; i++)
@@ -96,7 +96,6 @@ void Wall::update(Snake& snake, char direct)
 		update_food();
 		ate = true;
 	}
-	
 	showWall();
 }
 
@@ -106,6 +105,7 @@ bool Wall::test(Snake& snake)
 	char m = getElem(head->x, head->y);
 	if (m == '#' || !snake.validate()) {//表明咬到了自己
 		//表明已经碰到墙体
+		this->fail = true;
 		return false;//返回false
 	}
 	return true;
@@ -114,6 +114,7 @@ bool Wall::test(Snake& snake)
 void Wall::game_over()
 {
 	this->initWall();
+	gameArray[food_x][food_y] = ' ';
 	gameArray[15][8] = 'G';
 	gameArray[15][10] = 'A';
 	gameArray[15][12] = 'M';
