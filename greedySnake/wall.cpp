@@ -1,4 +1,7 @@
 #include"wall.h"
+#include<random>
+bool Wall::ate = false;
+
 void Wall :: initWall() {
 	for (int i = 0; i < ROW; i++)
 	{
@@ -63,6 +66,7 @@ void Wall::drawSnake(node* para)//para指示的是蛇头的节点
 		para = para->next;
 	}
 }
+//用于判定食物是否在蛇里面
 
 
 void Wall::update(Snake& snake, char direct)
@@ -76,7 +80,13 @@ void Wall::update(Snake& snake, char direct)
 		snake.move(direct);
 	}
 	initWall();
+	//画蛇
 	drawSnake(snake.getHead());
+	//更新食物
+	if (!ate) {
+		update_food();
+		ate = true;
+	}
 	showWall();
 }
 
@@ -103,4 +113,16 @@ void Wall::game_over()
 	gameArray[15][22] = 'E';
 	gameArray[15][24] = 'R';
 	this->showWall();
+}
+
+void Wall::update_food()
+{
+	food_x = 1 + rand() % 31;
+	food_y = 1 + rand() % 31;
+	while (gameArray[food_x][food_y]=='*'||gameArray[food_x][food_y] == '@')
+	{
+		food_x = 1 + rand() % 31;
+		food_y = 1 + rand() % 31;
+	}
+	gameArray[food_x][food_y] = 'o';
 }

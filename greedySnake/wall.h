@@ -9,7 +9,7 @@ using namespace std;
 class Wall
 {
 public:
-	
+	static bool ate;
 	enum {
 		ROW = 32,
 		COL = 32
@@ -33,11 +33,15 @@ public:
 	bool test(Snake& snake);
 
 	void game_over();
+
+	void update_food();
 private:
 	char gameArray[ROW][COL];
+	int food_x, food_y;
+
+protected:
+	
 };
-
-
 
 
 #endif // !__greedy__snake__wall
