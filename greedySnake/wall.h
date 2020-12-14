@@ -9,8 +9,8 @@ using namespace std;
 class Wall
 {
 public:
-	static bool ate;
-	static bool fail;
+	bool ate = false;
+	bool fail = false;
 	enum {
 		ROW = 32,
 		COL = 32
@@ -38,10 +38,15 @@ public:
 	void update_food();
 
 	void snake_eat(Snake& snake);
+
+	int getScore() {
+		return score;
+	}
+
 private:
 	char gameArray[ROW][COL];
 	int food_x, food_y;
-
+	int score = 0;//默认的分数为0;
 protected:
 	
 };

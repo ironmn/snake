@@ -3,6 +3,9 @@
 #define _CTR_SECURE_NO_WARNING
 #include <iostream>
 #include <time.h>
+#include<string.h>
+#include <algorithm>
+#define INF 0x3f3f3f3f
 #include<stdlib.h>
 #include<conio.h>
 #include <Windows.h>
@@ -10,35 +13,41 @@
 #include"wall.h"
 using namespace std;
 
-clock_t nowTime, preTime;
-
+clock_t nowTime, preTime;//用于计算时间差
+int max_scores[5];
 int speed[] = { 10000,500,150,15,2 };
 int main()
 {
+    fill(max_scores, max_scores + 5, -INF);
+    //重新开始的标记
     char restart =  ' ';
     while (restart != 'q') {
-        system("cls");
+        system("cls");//先把之前所有的控制台输出都给他清空了
         //开始界面
         cout << "请输入游戏难度！" << endl;
-        cout << "1: 简单\t 2:中等\t 3:困难\t4:地狱" << endl;
+        cout << "1: 简单\t 2:中等\t 3:困难\t 4:地狱" << endl;
         char diff = getchar();
+        int degree = diff - '0';
         system("cls");
         //正式进入游戏
         Wall wall;
-        wall.initWall();
-        Snake snake;
-        wall.drawSnake(snake.getHead());
-        //默认的移动方向
+        wall.initWall();//新建一个墙，并且初始化一下
+        Snake snake;//创建一条蛇
+        wall.drawSnake(snake.getHead());//把蛇画在控制台上
+        //默认的移动方向为d
         char input = 'd';
-        bool has_input = false;
-        while (!wall.fail) {
+        bool has_input = false;//用于防止用户在一次时间间隔内
+        //重复输入导致无法明确的获得蛇的运行过程
+        while (!wall.fail) {//
+            //更新地图
             wall.update(snake, input);
             preTime = clock();
             has_input = false;
             while (true)
             {
-                nowTime = clock();
-                if (nowTime - preTime > speed[diff - '0']) {
+                nowTime = clock();//当时间差超过了我们设定的阈值后
+                //就进行下一步移动操作
+                if (nowTime - preTime > speed[degree]) {
                     break;
                 }
                 //如果检测到了输入，就把input设置为输入的字符
@@ -47,15 +56,19 @@ int main()
                     has_input = true;//防止重复的输入去迭代input
                 }
             }
+            //清空控制台的所有输出
             system("cls");
         }
+        //如果退出循环了，表明游戏已经失败
+        max_scores[degree] = max(max_scores[degree], wall.getScore());
+      
         wall.game_over();
-        cout << "按任意键重新开始游戏"<<endl;
+        cout << "在难度为 " << degree << " 下的历史最高分是：" << max_scores[degree] << endl;
+        cout << "按任意键重新开始游戏" << endl;
         cout << "按Q退出" << endl;
         getchar();
+        //读取字符，用于测试用户是否还要继续游戏
         restart = getchar();
-        Wall::ate = false;
-        Wall::fail = false;
     }
     return 0;
 }

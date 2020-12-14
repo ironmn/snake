@@ -3,8 +3,6 @@
 #include<Windows.h>
 #include<random>
 
-bool Wall::ate = false;
-bool Wall::fail = false;
 void Wall :: initWall() {
 	update_food();
 	for (int i = 0; i < ROW; i++)
@@ -42,6 +40,9 @@ void Wall::showWall()
 		}
 		if (i == 9) {
 			cout << "D:向右移动";
+		}
+		if (i == 13) {
+			cout << "    分数：" << score;
 		}
 		cout << endl;
 	}
@@ -84,6 +85,7 @@ void Wall::update(Snake& snake, char direct)
 	}
 	if (snake.getHead()->y == food_x && snake.getHead()->x == food_y) {
 		snake_eat(snake);
+		score++;
 	}
 	else if (direct == 'w' || direct == 'a' || direct == 's' || direct == 'd') {
 		snake.move(direct);
@@ -103,7 +105,7 @@ bool Wall::test(Snake& snake)
 {
 	node* head = snake.getHead();
 	char m = getElem(head->x, head->y);
-	if (m == '#' || !snake.validate()) {//表明咬到了自己
+	if (m == '#' || !snake.validate()) {//咬到了自己
 		//表明已经碰到墙体
 		this->fail = true;
 		return false;//返回false
@@ -111,6 +113,7 @@ bool Wall::test(Snake& snake)
 	return true;
 }
 
+//用于结束游戏的函数
 void Wall::game_over()
 {
 	this->initWall();
@@ -124,11 +127,15 @@ void Wall::game_over()
 	gameArray[15][22] = 'E';
 	gameArray[15][24] = 'R';
 	this->showWall();
+	cout << "你的得分是 : " << score << endl;
 }
 
+//返回地图随机数的函数
 int r() {
 	return 2 + rand() % 28;
 }
+
+//随机更新食物的函数
 void Wall::update_food()
 {
 	if (ate == false) {
