@@ -35,6 +35,8 @@ public:
 	void game_over();
 
 	void update_food();
+
+	void snake_eat(Snake& snake);
 private:
 	char gameArray[ROW][COL];
 	int food_x, food_y;

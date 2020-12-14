@@ -1,8 +1,12 @@
 #include"wall.h"
+#define _TIME_LEAP 200;
+#include<Windows.h>
 #include<random>
+
 bool Wall::ate = false;
 
 void Wall :: initWall() {
+	update_food();
 	for (int i = 0; i < ROW; i++)
 	{
 		for (int j = 0; j < COL; j++)
@@ -13,6 +17,7 @@ void Wall :: initWall() {
 			else gameArray[i][j] = ' ';
 		}
 	}
+	gameArray[food_x][food_y] = 'o';
 }
 
 void Wall::showWall()
@@ -71,12 +76,16 @@ void Wall::drawSnake(node* para)//para指示的是蛇头的节点
 
 void Wall::update(Snake& snake, char direct)
 {
+	
 	if (!test(snake)) {
 		//如果当前的蛇已经碰到边界了，就处理异常
 		game_over();
 		return;
 	}
-	if(direct == 'w' || direct == 'a' || direct == 's' || direct == 'd'){
+	if (snake.getHead()->y == food_x && snake.getHead()->x == food_y) {
+		snake_eat(snake);
+	}
+	else if (direct == 'w' || direct == 'a' || direct == 's' || direct == 'd') {
 		snake.move(direct);
 	}
 	initWall();
@@ -87,6 +96,7 @@ void Wall::update(Snake& snake, char direct)
 		update_food();
 		ate = true;
 	}
+	
 	showWall();
 }
 
@@ -94,8 +104,8 @@ bool Wall::test(Snake& snake)
 {
 	node* head = snake.getHead();
 	char m = getElem(head->x, head->y);
-	if (m == '#' || m == '*') {
-		//表明已经碰到墙体或者自己了
+	if (m == '#' || !snake.validate()) {//表明咬到了自己
+		//表明已经碰到墙体
 		return false;//返回false
 	}
 	return true;
@@ -115,14 +125,25 @@ void Wall::game_over()
 	this->showWall();
 }
 
+int r() {
+	return 2 + rand() % 28;
+}
 void Wall::update_food()
 {
-	food_x = 1 + rand() % 31;
-	food_y = 1 + rand() % 31;
-	while (gameArray[food_x][food_y]=='*'||gameArray[food_x][food_y] == '@')
-	{
-		food_x = 1 + rand() % 31;
-		food_y = 1 + rand() % 31;
+	if (ate == false) {
+		food_x = r();
+		food_y = r();
+		while (gameArray[food_x][food_y] == '*' || gameArray[food_x][food_y] == '@')
+		{
+			food_x = r();
+			food_y = r();
+		}
 	}
-	gameArray[food_x][food_y] = 'o';
+	ate = true;
+}
+
+void Wall::snake_eat(Snake& snake)
+{
+	ate = false;
+	snake.eat();
 }

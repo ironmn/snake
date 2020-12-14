@@ -21,6 +21,9 @@ public:
 	void move(char c);
 	void eat();
 	char getDirection();
+
+	bool validate();
+	pair<int, int> next_position();
 private:
 	//head结点表示蛇头
 	node* head;
@@ -33,6 +36,6 @@ private:
 	char direct;
 };
 
-#endif // !1
+#endif
 
 

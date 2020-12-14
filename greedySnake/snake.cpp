@@ -30,14 +30,37 @@ void Snake::setDirection(char c)
 	this->direct = c;
 }
 
+//用于验证接下来的移动是否合法
+bool Snake::validate()
+{
+	int x = next_position().first;
+	int y = next_position().second;
+	node* tmp = getHead();
+	while (tmp)
+	{
+		if (x == tmp->x && y == tmp->y) return false;
+		tmp = tmp->next;
+	}
+	return true;
+}
+
+//返回接下来要移动的坐标,这个坐标是实际坐标
+pair<int,int> 
+Snake::next_position() {
+	//根据不同的方向来设定新的蛇头
+	if (direct == 'w') return { head->x, head->y - 1 };
+	else if (direct == 'a') return { head->x - 1, head->y };
+	else if (direct == 's') return { head->x, head->y + 1 };
+	else if (direct == 'd') return { head->x + 1, head->y };
+}
+
+
 void Snake::move()
 {
 	node* newHead = NULL;
 	//根据不同的方向来设定新的蛇头
-	if (direct == 'w') newHead = new node(head->x, head->y - 1, head->icon, head);
-	else if (direct == 'a') newHead = new node(head->x - 1, head->y, head->icon, head);
-	else if (direct == 's') newHead = new node(head->x, head->y+1, head->icon, head);
-	else if (direct == 'd') newHead = new node(head->x+1, head->y, head->icon, head);
+	newHead = new node(next_position().first, next_position().second, head->icon, head);
+	
 	//直接释放掉之前的old tail；这种做法是错误的。
 	//delete操作是直接把指针变成一个野指针，而不是设置为NULL
 	//删除尾部节点还是得用链表的基本用法。
@@ -74,5 +97,14 @@ void Snake::move(char c)
 	if (!is_opposite({ c,getDirection() }))
 		setDirection(c);
 	move();
+}
+
+void Snake::eat()
+{
+	node* newHead = NULL;
+	newHead = new node(next_position().first, next_position().second, head->icon, head);
+	head->icon = '*';
+	head = newHead;
+	length++;
 }
 

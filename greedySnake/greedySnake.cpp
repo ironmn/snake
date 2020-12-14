@@ -12,30 +12,30 @@ using namespace std;
 
 clock_t nowTime, preTime;
 
-
+int speed[] = { 10000,500,150,15,2 };
 int main()
 {
     //开始界面
-    cout << "按下任意键开始游戏！" << endl;
-    char c = cin.get();
+    cout << "请输入游戏难度！" << endl;
+    cout << "1: 简单\t 2:中等\t 3:困难\t4:地狱" << endl;
+    char diff = getchar();
     system("cls");
     //正式进入游戏
     Wall wall;
     wall.initWall();
     Snake snake;
     wall.drawSnake(snake.getHead());
-    
     //默认的移动方向
     char input = 'd';
     bool has_input = false;
-    for (;;) {
+    while(1) {
         wall.update(snake, input);
         preTime = clock();
         has_input = false;
         while (true)
         {
             nowTime = clock();
-            if (nowTime - preTime > 200) {
+            if (nowTime - preTime > speed[diff - '0']) {
                 break;
             }
             //如果检测到了输入，就把input设置为输入的字符
@@ -46,6 +46,7 @@ int main()
         }
         system("cls");
     }
+    wall.game_over();
     
     return 0;
 }
